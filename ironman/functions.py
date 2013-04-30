@@ -1,11 +1,8 @@
-def get_frequency(transaction, minimum_support):
-    transaction_with_support = reduce_(map_(transaction))
-    result = {}
-    for item in transaction_with_support:
-      if item[1] > minimum_support:
-          result[item[0]] = item[1]
+import itertools
 
-    return result
+def get_frequency(transaction, minimum_support):
+    return dict(filter(lambda item: item[1] >= minimum_support, 
+                       reduce_(map_(transaction))))
 
 def map_(list_of_set):
     for column_set in list_of_set:
