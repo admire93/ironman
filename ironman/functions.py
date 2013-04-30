@@ -16,7 +16,7 @@ def reduce_(t):
 def collect_(transaction_iter):
     res = {}
     for item in transaction_iter:
-        if(res.has_key(item[0])):
+        if item[0] in res:
           res[item[0]].append(item[1])
         else:
           res[item[0]] = [item[1]]
