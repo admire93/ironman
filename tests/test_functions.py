@@ -1,4 +1,6 @@
 import unittest
+
+import ironman.apriori
 import ironman.functions
 
 class IronmanFunctionsTestCase(unittest.TestCase):
@@ -14,5 +16,5 @@ class IronmanFunctionsTestCase(unittest.TestCase):
         ] 
         
     def test_get_frequency(self):
-        result = ironman.functions.get_frequency(self.transaction, 2)
-        self.assertEqual(result, {'a': 3, 'b': 6, 'c': 4, 'd': 5}, "Get Frequency")
+        result = ironman.apriori.get_frequency(self.transaction, 2)
+        self.assertEqual(result, {"{'a'}": 3, "{'b'}": 6, "{'c'}": 4, "{'d'}": 5} , "Get frequency test")
