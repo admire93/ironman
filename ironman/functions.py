@@ -38,3 +38,13 @@ def get_next_length_set(curr_sets, except_sets):
                     result_sets.append(curr) 
 
     return result_sets
+
+def seperate_frequency_items_by_support(d, min_supp):
+    high = []
+    low = []
+    for k, v in d.items():
+        if v >= min_supp:
+            high.append((k, v))
+        else:
+            low.append((k, v))
+    return (dict(high), dict(low))

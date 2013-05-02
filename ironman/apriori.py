@@ -39,27 +39,23 @@ def get_frequency_for(for_, transaction, level):
           FrequencyForItemMapReducer(for_)
         ))
 
-def get_association_rules(data):
-    level = 1
-    min_supp = 3
-    def seperate_frequency_items_by_support(d, min_supp):
-        high = []
-        low = []
-        for k, v in d.items():
-            if v >= min_supp:
-                high.append((k, v))
-            else:
-                low.append((k, v))
-        return (dict(high), dict(low))
-
+def get_association_rules(data, min_supp=3):
+    level = 1 
     next_sets = []
-    start_frequency, except_frequency = seperate_frequency_items_by_support(get_frequency_for([], data, level), min_supp)
+    start_frequency, except_frequency = ironman.functions.seperate_frequency_items_by_support(
+                                            get_frequency_for([], data, level),
+                                            min_supp
+                                        )
     while len(start_frequency) > 0:
-        start_sets = ironman.functions.get_set_from_keys(start_frequency)
-        except_sets = ironman.functions.get_set_from_keys(except_frequency)
-        next_sets = ironman.functions.get_next_length_set(start_sets, except_sets)
+        next_sets = ironman.functions.get_next_length_set(
+                        ironman.functions.get_set_from_keys(start_frequency),
+                        ironman.functions.get_set_from_keys(except_frequency)
+                    )
         data = list(filter(lambda x: len(x) >= level, data))
-        start_frequency, except_frequency = seperate_frequency_items_by_support(get_frequency_for(next_sets, data, level), min_supp)
+        start_frequency, except_frequency = ironman.functions.seperate_frequency_items_by_support(
+                                                get_frequency_for(next_sets, data, level),
+                                                min_supp
+                                            )
         level += 1
 
     return next_sets
