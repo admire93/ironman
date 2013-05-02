@@ -27,3 +27,9 @@ class IronmanFunctionsTestCase(unittest.TestCase):
         r = ironman.apriori.get_frequency_for(expected_set, self.transaction, 2, 2)
         for k, v in r.items():
             self.assertTrue(v >= 2)
+
+    def test_get_next_length_set(self):
+        s = [{'a'}, {'b'}, {'c'}, {'d'}]
+        expected  = [{'a', 'b'}, {'a', 'c'}, {'a', 'd'}, {'b', 'c'}, {'b', 'd'}, {'c', 'd'}]
+        for x in ironman.functions.get_next_length_set(s):
+            self.assertTrue(x in expected, "Get next length set => {0}".format(x))

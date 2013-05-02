@@ -22,3 +22,20 @@ def get_set_from_keys(d):
             result_set |= s
 
         return result_set
+
+def get_next_length_set(curr_sets):
+    curr_sets = list(curr_sets)
+    curr_all_set = set()
+    result_sets = []
+    for x in curr_sets:
+        for y in x:
+            curr_all_set.add(y)
+
+    for x in curr_sets:
+        for y in list(curr_all_set):
+            curr = set(x)
+            curr.add(y)
+            if not curr in curr_sets and not curr in result_sets:
+                result_sets.append(curr) 
+
+    return result_sets
