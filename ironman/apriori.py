@@ -59,3 +59,12 @@ def get_association_rules(data, min_supp=3):
         level += 1
 
     return next_sets
+
+def get_association_rules_for(for_, data, min_supp=3):
+    rules = get_association_rules(data, min_supp)
+    result = []
+    for x in rules:
+        if x.issuperset(for_):
+            result.append(x)
+
+    return result
