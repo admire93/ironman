@@ -28,20 +28,40 @@ class FrequencyForItemMapReducer(MapReducer):
                 if x.issubset(d):
                     yield (x.__str__(), 1)
 
-def get_frequency(transaction, minimum_support):
-    r = ironman.functions.map_reduce(transaction, FrequentItemMapReducer())
-    return dict(filter(lambda item: item[1] >= minimum_support, r))
+def get_frequency(transaction):
+    return dict(ironman.functions.map_reduce(transaction, FrequentItemMapReducer()))
 
-def get_frequency_for(for_, transaction, level, minimum_support):
-    subset = []
-    for x in itertools.combinations(for_, level):
-        subset.append(set(x))
-
-    r = ironman.functions.map_reduce(
+def get_frequency_for(for_, transaction, level):
+    return dict(ironman.functions.map_reduce(
       transaction,
-      FrequencyForItemMapReducer(subset)
-    )
-    return dict(filter(lambda item: item[1] >= minimum_support, r))
+      FrequencyForItemMapReducer(for_)
+    ))
 
 def get_association_rules(data):
-    pass
+    level = 2
+    min_supp = 3
+    frequency = get_frequency(data)
+    def foo(d, min_supp):
+        high = []
+        low = []
+        for k, v in d.items():
+            if v >= min_supp:
+                high.append((k, v))
+            else:
+                low.append((k, v))
+        return (dict(high), dict(low))
+
+    start_frequency, except_frequency = foo(frequency, min_supp)
+    next_sets = []
+    while len(start_frequency) > 0:
+        start_sets = ironman.functions.get_set_from_keys(start_frequency)
+        except_sets = ironman.functions.get_set_from_keys(except_frequency)
+        next_sets = ironman.functions.get_next_length_set(start_sets, except_sets)
+        data = list(filter(lambda x: len(x) >= level, data))
+        level += 1
+        start_frequency, except_frequency = foo(get_frequency_for(next_sets, data, level), min_supp)
+        print("Start sets", start_sets)
+        print("Next sets", next_sets)
+        print("Except sets", except_sets)
+
+    return next_sets

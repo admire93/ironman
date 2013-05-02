@@ -16,20 +16,16 @@ class IronmanFunctionsTestCase(unittest.TestCase):
         ] 
         
     def test_get_frequency(self):
-        result = ironman.apriori.get_frequency(self.transaction, 2)
+        result = ironman.apriori.get_frequency(self.transaction)
         self.assertEqual(result, {"{'a'}": 3, "{'b'}": 6, "{'c'}": 4, "{'d'}": 5}, "Get frequency test")
 
-    def test_get_frequency_for(self):
-        frequency = ironman.apriori.get_frequency(self.transaction, 2)
-        expected_set = {'a', 'b', 'c', 'd'}
-        result_set = ironman.functions.get_set_from_keys(frequency)
-        self.assertEqual(result_set, expected_set, "Get sets from dict keys")
-        r = ironman.apriori.get_frequency_for(expected_set, self.transaction, 2, 2)
-        for k, v in r.items():
-            self.assertTrue(v >= 2)
-
+    @unittest.skip
     def test_get_next_length_set(self):
         s = [{'a'}, {'b'}, {'c'}, {'d'}]
         expected  = [{'a', 'b'}, {'a', 'c'}, {'a', 'd'}, {'b', 'c'}, {'b', 'd'}, {'c', 'd'}]
         for x in ironman.functions.get_next_length_set(s):
             self.assertTrue(x in expected, "Get next length set => {0}".format(x))
+
+    def test_get_association_rules(self):
+        result = ironman.apriori.get_association_rules(self.transaction)
+        self.assertEqual(result[0], {'b', 'c', 'd'}, "Apriori test")
