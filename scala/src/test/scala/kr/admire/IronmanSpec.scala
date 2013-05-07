@@ -23,5 +23,21 @@ class IronmanSpec extends Specification {
                                                       Set("d") -> 5
                                                     ) 
     }
+
+    "Get Frequency for specific sets " in {
+      val specificSets: List[Set[String]] = List[Set[String]](
+        Set("a"),
+        Set("b"),
+        Set("c"),
+        Set("d")
+      )
+      Ironman.getFrequencyFor[String](specificSets, transaction) === Map[Set[String], Long](
+                                                                          Set("a") -> 3,
+                                                                          Set("b") -> 6,
+                                                                          Set("c") -> 4,
+                                                                          Set("d") -> 5
+                                                                        )
+
+    }
   }
 }
